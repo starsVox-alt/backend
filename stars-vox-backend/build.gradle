@@ -1,0 +1,29 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.4.2'
+	id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.starsvox'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	sourceCompatibility = '17' // Java のバージョンに合わせてください
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.apache.httpcomponents:httpclient:4.5.14' // Apache HttpClient
+	implementation 'org.json:json:20230227' // JSON 処理
+	implementation 'org.springframework.boot:spring-boot-starter-json' // Spring Boot JSON
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
