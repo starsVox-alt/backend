@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 public class AudioController {
 
     private static final String API_BASE_URL = "https://apibox.erweima.ai/api/v1/generate";
-    private static final String API_KEY = "b2a68126daf2a27be7b004708ce8fbf9";
+    private static final String API_KEY = ""; // APIキー（AWSのシークレットキーマネージャーから取ってくるとか対応）それ以外は各自で入力して確認してもらう
 
     @PostMapping(value = "/generate", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AudioResponse> generateAudio(@RequestBody AudioRequest audioRequest) {
