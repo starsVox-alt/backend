@@ -3,6 +3,7 @@ package com.starsvox.backend.controller;
 import com.starsvox.backend.model.AudioRequest;
 import com.starsvox.backend.model.AudioResponse;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -17,8 +18,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class AudioController {
 
-    private static final String API_BASE_URL = "https://apibox.erweima.ai/api/v1/generate"; // URLを修正
-    private static final String API_KEY = "a598074ca3130eaff8389734fb1dab72"; // 実際のAPIキーを設定
+    private static final String API_BASE_URL = "https://apibox.erweima.ai/api/v1/generate";
+    private static final String API_KEY = "b2a68126daf2a27be7b004708ce8fbf9";
 
     @PostMapping(value = "/generate", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AudioResponse> generateAudio(@RequestBody AudioRequest audioRequest) {
@@ -26,41 +27,63 @@ public class AudioController {
             String prompt = audioRequest.getPrompt();
 
             if (prompt == null || prompt.isEmpty()) {
-                return ResponseEntity.badRequest().body(new AudioResponse(null, "prompt is required"));
+                return ResponseEntity.badRequest().body(new AudioResponse(400, "prompt is required", null));
             }
 
             try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
-                HttpPost generatePost = new HttpPost(API_BASE_URL); // URLを修正
+                HttpPost generatePost = new HttpPost(API_BASE_URL);
                 generatePost.addHeader("Authorization", "Bearer " + API_KEY);
                 generatePost.addHeader("Content-Type", "application/json");
 
                 JSONObject generateJson = new JSONObject();
                 generateJson.put("prompt", prompt);
-                generateJson.put("customMode", false); // 固定値
-                generateJson.put("instrumental", false); // 固定値
-                generateJson.put("model", "V3_5"); // 固定値
-                generateJson.put("callBackUrl", "https://api.example.com/callback"); // 固定値
+                generateJson.put("customMode", false);
+                generateJson.put("instrumental", false);
+                generateJson.put("model", "V3_5");
+                generateJson.put("callBackUrl", "https://api.example.com/callback");
 
                 generatePost.setEntity(new StringEntity(generateJson.toString(), "UTF-8"));
 
                 try (CloseableHttpResponse generateResponse = httpClient.execute(generatePost)) {
                     int statusCode = generateResponse.getStatusLine().getStatusCode();
-                    String responseJson = EntityUtils.toString(generateResponse.getEntity()); // レスポンス全体を取得
+                    String responseJson = EntityUtils.toString(generateResponse.getEntity());
 
                     if (statusCode != 200) {
-                        return ResponseEntity.status(statusCode).body(new AudioResponse(null, "failed to generate audio: " + responseJson + ", Status Code: " + statusCode)); // エラーメッセージにレスポンス全体を含める
+                        return ResponseEntity.status(statusCode).body(new AudioResponse(statusCode, "Failed to generate audio", responseJson));
                     }
 
                     JSONObject responseData = new JSONObject(responseJson);
-                    String taskId = responseData.getJSONObject("data").getString("taskId"); // taskIdを取得
+                    String taskId = responseData.getJSONObject("data").getString("taskId");
 
-                    return ResponseEntity.ok(new AudioResponse(taskId, null)); // taskIdを返す
-
+                    return ResponseEntity.ok(new AudioResponse(200, "success", taskId));
                 }
             }
 
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new AudioResponse(null, "Internal Server Error: " + e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new AudioResponse(500, "Internal Server Error: " + e.getMessage(), null));
+        }
+    }
+
+    @GetMapping(value = "/task-info", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> getTaskInfo(@RequestParam String taskId) {
+        try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
+            String url = API_BASE_URL + "/record-info?taskId=" + taskId;
+            HttpGet getTaskRequest = new HttpGet(url);
+            getTaskRequest.addHeader("Authorization", "Bearer " + API_KEY);
+            getTaskRequest.addHeader("Accept", "application/json");
+
+            try (CloseableHttpResponse taskResponse = httpClient.execute(getTaskRequest)) {
+                int statusCode = taskResponse.getStatusLine().getStatusCode();
+                String responseJson = EntityUtils.toString(taskResponse.getEntity());
+
+                if (statusCode != 200) {
+                    return ResponseEntity.status(statusCode).body("Failed to retrieve task info: " + responseJson + ", Status Code: " + statusCode);
+                }
+
+                return ResponseEntity.ok(responseJson);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error: " + e.getMessage());
         }
     }
 }

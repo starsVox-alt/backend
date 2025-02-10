@@ -1,30 +1,40 @@
 package com.starsvox.backend.model;
 
 public class AudioResponse {
-    private String taskId;
-    private String message;
+    private int code;
+    private String msg;
+    private Object data;  // データの型は柔軟に対応できるようにObjectにしています
 
     public AudioResponse() {
     }
 
-    public AudioResponse(String taskId, String message) {
-        this.taskId = taskId;
-        this.message = message;
+    public AudioResponse(int code, String msg, Object data) {
+        this.code = code;
+        this.msg = msg;
+        this.data = data;
     }
 
-    public String getTaskId() {
-        return taskId;
+    public int getCode() {
+        return code;
     }
 
-    public void setTaskId(String taskId) {
-        this.taskId = taskId;
+    public void setCode(int code) {
+        this.code = code;
     }
 
-    public String getMessage() {
-        return message;
+    public String getMsg() {
+        return msg;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
+    public Object getData() {
+        return data;
+    }
+
+    public void setData(Object data) {
+        this.data = data;
     }
 }
