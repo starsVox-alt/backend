@@ -1,14 +1,30 @@
 package com.starsvox.backend.model;
 
-import lombok.Data;
-
-@Data
 public class AudioResponse {
-    private String taskId; // audioFileの代わりにtaskId
-    private String errorMessage;
+    private String taskId;
+    private String message;
 
-    public AudioResponse(String taskId, String errorMessage) {
+    public AudioResponse() {
+    }
+
+    public AudioResponse(String taskId, String message) {
         this.taskId = taskId;
-        this.errorMessage = errorMessage;
+        this.message = message;
+    }
+
+    public String getTaskId() {
+        return taskId;
+    }
+
+    public void setTaskId(String taskId) {
+        this.taskId = taskId;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

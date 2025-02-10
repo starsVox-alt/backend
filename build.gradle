@@ -9,7 +9,7 @@ version = '0.0.1-SNAPSHOT'
 
 java {
 	sourceCompatibility = '17'
-	targetCompatibility = '17' // 明示的にtargetCompatibilityも設定
+	targetCompatibility = '17'
 }
 
 repositories {
@@ -21,10 +21,6 @@ dependencies {
 	implementation 'org.apache.httpcomponents:httpclient:4.5.14'
 	implementation 'org.json:json:20230227'
 	implementation 'org.springframework.boot:spring-boot-starter-json'
-	compileOnly 'org.projectlombok:lombok:1.18.28' // Lombok 1.18.28 (最新)
-	annotationProcessor 'org.projectlombok:lombok:1.18.28'
-
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 tasks.named('test') {

@@ -1,8 +1,20 @@
 package com.starsvox.backend.model;
 
-import lombok.Data;
-
-@Data
 public class AudioRequest {
     private String prompt;
+
+    public AudioRequest() {
+    }
+
+    public AudioRequest(String prompt) {
+        this.prompt = prompt;
+    }
+
+    public String getPrompt() {
+        return prompt;
+    }
+
+    public void setPrompt(String prompt) {
+        this.prompt = prompt;
+    }
 }

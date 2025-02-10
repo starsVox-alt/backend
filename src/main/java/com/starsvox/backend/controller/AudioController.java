@@ -36,9 +36,7 @@ public class AudioController {
 
                 JSONObject generateJson = new JSONObject();
                 generateJson.put("prompt", prompt);
-                generateJson.put("style", "Classical"); // 固定値
-                generateJson.put("title", "Peaceful Piano Meditation"); // 固定値
-                generateJson.put("customMode", true); // 固定値
+                generateJson.put("customMode", false); // 固定値
                 generateJson.put("instrumental", false); // 固定値
                 generateJson.put("model", "V3_5"); // 固定値
                 generateJson.put("callBackUrl", "https://api.example.com/callback"); // 固定値
