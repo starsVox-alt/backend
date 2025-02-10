@@ -1,0 +1,32 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.2.2' // Spring Boot 3.2.2 (LTS)
+	id 'io.spring.dependency-management' version '1.1.0' // io.spring.dependency-management 1.1.0
+}
+
+group = 'com.starsvox'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	sourceCompatibility = '17'
+	targetCompatibility = '17' // 明示的にtargetCompatibilityも設定
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.apache.httpcomponents:httpclient:4.5.14'
+	implementation 'org.json:json:20230227'
+	implementation 'org.springframework.boot:spring-boot-starter-json'
+	compileOnly 'org.projectlombok:lombok:1.18.28' // Lombok 1.18.28 (最新)
+	annotationProcessor 'org.projectlombok:lombok:1.18.28'
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
